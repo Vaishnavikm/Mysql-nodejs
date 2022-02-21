@@ -73,7 +73,7 @@ app.get('/customer',(req,res)=>
 
 app.get('/add',(req,res)=>
 {
-    var post={custid: 6,fname:'Kevin',lname:'varghese',phone:'8989892321',Address:'XYZ Street'};
+    var post={custid: 7,fname:'Kevin',lname:'varghese',phone:'8989892321',Address:'XYZ Street'};
     var sql='INSERT INTO customer SET ?';
     var query=connection.query(sql,post,(err,result)=>
     {
