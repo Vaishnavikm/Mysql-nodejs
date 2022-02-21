@@ -34,21 +34,72 @@ app.listen(port, (err) => {
 app.use(express.static(path.join(__dirname)))
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, './index.html'))
+  res.sendFile(path.join(__dirname, 'index.html'))
 })
 
-app.get('/Customer', (req, res) => {
-  connection.query('SELECT * FROM customer', (err, data, fields) => {
-    if(!err) {
-      data = JSON.stringify(data, null, 2)
-      res.write(data)
-      res.end()
-      return
-    }else {
-      console.log(err);
-    }
-  })
-})
+// app.get('/Customer', (req, res) => {
+//   connection.query('SELECT * FROM customer', (err, data, fields) => {
+//     if(!err) {
+//       data = JSON.stringify(data, null, 2)
+//       res.write(data)
+//       res.end()
+//       return
+//     }else {
+//       console.log(err);
+//     }
+//   })
+// })
+
+app.get('/customer',(req,res)=>
+    {
+        connection.query('SELECT * FROM customer',(err,rows,fields)=>
+        {
+            if(!err)
+            res.send(rows);
+            else
+            console.log("error");
+        })
+    })
+    app.get('/customer/:id',(req,res)=>
+    {
+        connection.query('SELECT *FROM customer WHERE custid=?',[req.params.id],(err,rows,fields)=>
+        {
+            if(!err)
+            res.send(rows);
+            else
+            console.log("error");
+        })
+    })
+
+app.get('/add',(req,res)=>
+{
+    var post={custid: 6,fname:'Kevin',lname:'varghese',phone:'8989892321',Address:'XYZ Street'};
+    var sql='INSERT INTO customer SET ?';
+    var query=connection.query(sql,post,(err,result)=>
+    {
+        if(err) throw error;
+        res.send("Inserted Rows.....")
+    });
+});
+app.get('/update/:id',(req,res)=>
+{
+    var name1='Reena'
+    var sql=`UPDATE customer SET fname='${name1}' WHERE custid=${req.params.id}`;
+    var query=connection.query(sql,(err,result)=>
+    {
+        if(err) throw err;
+        res.send("Updated the Rows.....")
+    });
+});
+app.get('/delete/:id',(req,res)=>
+{
+    var sql=`DELETE FROM customer WHERE custid=${req.params.id}`;
+    var query=connection.query(sql,(err,result)=>
+    {
+        if(err) throw err;
+        res.send("Deleted the Rows.....")
+    });
+});
 
 
 
